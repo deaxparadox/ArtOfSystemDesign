@@ -613,6 +613,8 @@ The honest trade-off table:
 
 ## Phase 10 — Classic System Design Problems
 
+**[→ Full Phase 10 Learning Materials](./phase-10/README.md)**
+
 ### Approach Template (use for every problem)
 
 **Step 1 — Clarify (5 min):**
@@ -644,14 +646,18 @@ Go 3 layers deep on 2–3 of the hardest components. Don't mention 10 things sha
 **Step 6 — Trade-off Summary:**
 What was decided, what was traded off, and why.
 
-### 10.1 URL Shortener
+### [10.1 Design a URL Shortener](./phase-10/10.1-url-shortener.md)
 
 **The interesting parts** (not "store URL in DB, look it up"):
 - ID generation: base-62 encoding of a numeric ID. Sequential IDs are predictable — use a distributed ID generator (Snowflake) or random + collision detection.
 - Redirect latency < 10ms requirement → pure cache lookup, no DB on the hot path.
 - Analytics: don't count clicks synchronously in the redirect path. Write click events to a queue (Kafka), process asynchronously. The redirect should be fire-and-forget.
 
-### 10.4 Social Feed / Timeline
+### [10.2 Design a Rate Limiter](./phase-10/10.2-rate-limiter.md)
+
+### [10.3 Design a Notification System](./phase-10/10.3-notification-system.md)
+
+### [10.4 Design a Social Feed / Timeline](./phase-10/10.4-social-feed-timeline.md)
 
 See [Fan-out on Write vs Fan-out on Read](#68-fan-out-on-write-vs-fan-out-on-read) above.
 
@@ -660,7 +666,7 @@ See [Fan-out on Write vs Fan-out on Read](#68-fan-out-on-write-vs-fan-out-on-rea
 - Fanout service as a separate async process (not in the write path)
 - Media storage: separate from tweet metadata (S3 for images/video, CDN for delivery)
 
-### 10.5 Chat System (WhatsApp Model)
+### [10.5 Design a Chat System — WhatsApp Model](./phase-10/10.5-chat-system.md)
 
 **The hard problems:**
 1. **Message delivery guarantees:** At-least-once at the protocol level, with client-side deduplication by message ID.
@@ -668,7 +674,13 @@ See [Fan-out on Write vs Fan-out on Read](#68-fan-out-on-write-vs-fan-out-on-rea
 3. **Message ordering:** Monotonically increasing sequence numbers per chat. The server assigns the sequence number — not the client.
 4. **Connection handling:** WebSocket per client. At 1M concurrent users, 1M open connections. Use connection servers separate from business logic servers.
 
-### 10.9 Ride-Sharing (Uber Model)
+### [10.6 Design a Search Autocomplete](./phase-10/10.6-search-autocomplete.md)
+
+### [10.7 Design a Distributed Cache](./phase-10/10.7-distributed-cache.md)
+
+### [10.8 Design a File Storage System](./phase-10/10.8-file-storage-system.md)
+
+### [10.9 Design a Ride-Sharing Service — Uber Model](./phase-10/10.9-ride-sharing-service.md)
 
 **The core infrastructure challenge:** matching riders to drivers in real-time.
 
@@ -676,6 +688,8 @@ See [Fan-out on Write vs Fan-out on Read](#68-fan-out-on-write-vs-fan-out-on-rea
 - **Geospatial indexing:** Quadtree or geohash for efficient "find drivers within X km" queries. PostGIS (PostgreSQL extension) works at moderate scale; custom geospatial index at Uber's scale.
 - **Matching:** Separate service. Inputs: rider location, driver locations. Output: best driver. Optimization problem — minimize ETA, not just distance.
 - **Supply/demand:** Surge pricing is a signal to drivers, not just a revenue mechanism. The matching engine and pricing engine are separate concerns.
+
+### [10.10 Design a Video Streaming Platform — YouTube Model](./phase-10/10.10-video-streaming-platform.md)
 
 ---
 
